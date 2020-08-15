@@ -5,8 +5,8 @@ public class SettingWindow extends JFrame {
     private GameWindow gameWindow;
 
     private static final int WINDOW_POS_X = GameWindow.WINDOW_POS_X + 50;
-    private static final int WINDOW_POS_Y = GameWindow.WINDOW_POS_Y + 50;
-    private static final int WINDOW_HEIGHT = GameWindow.WINDOW_HEIGHT - 100;
+    private static final int WINDOW_POS_Y = GameWindow.WINDOW_POS_Y + 25;
+    private static final int WINDOW_HEIGHT = GameWindow.WINDOW_HEIGHT - 50;
     private static final int WINDOW_WIDTH = GameWindow.WINDOW_WIDTH - 100;
 
     private static final int MIN_FIELD_SIZE = 3;
@@ -19,6 +19,15 @@ public class SettingWindow extends JFrame {
     private JRadioButton jrbHumanVsHuman;
     private ButtonGroup bgGameMode;
 
+    static final int GAME_DIFFICULT_MODE_EASY = 0;
+    static final int GAME_DIFFICULT_MODE_NORMAL = 1;
+    static final int GAME_DIFFICULT_MODE_HARD = 2;
+
+    private JRadioButton jrbEasy;
+    private JRadioButton jrbNormal;
+    private JRadioButton jrbHard;
+    private ButtonGroup bgDifficult;
+
     private JSlider jsFieldSize;
     private JSlider jsWinningLength;
 
@@ -29,16 +38,30 @@ public class SettingWindow extends JFrame {
         setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
         setTitle("TicTacToe setting");
 
-        setLayout(new GridLayout(8, 1));
+        setLayout(new GridLayout(12, 1));
 
         add(new JLabel("Choose game mode:"));
         jrbHumanVsAi = new JRadioButton("HumanVsAi", true);
         jrbHumanVsHuman = new JRadioButton("HumanVsHuman");
+
         add(jrbHumanVsAi);
         add(jrbHumanVsHuman);
+
         bgGameMode = new ButtonGroup();
         bgGameMode.add(jrbHumanVsAi);
         bgGameMode.add(jrbHumanVsHuman);
+
+        add(new JLabel("Choose difficult mode"));
+        jrbEasy = new JRadioButton("Easy mode", true);
+        jrbNormal = new JRadioButton("Normal mod");
+        jrbHard = new JRadioButton("Hard Mode");
+        add(jrbEasy);
+        add(jrbNormal);
+        add(jrbHard);
+        bgDifficult = new  ButtonGroup();
+        bgDifficult.add(jrbEasy);
+        bgDifficult.add(jrbNormal);
+        bgDifficult.add(jrbHard);
 
         add(new JLabel("Choose field size:"));
 
@@ -65,15 +88,25 @@ public class SettingWindow extends JFrame {
 
         buttonStartGame.addActionListener(e -> {
             int mode;
+            int difficultMode;
+            if (jrbEasy.isSelected()){
+                difficultMode = GAME_DIFFICULT_MODE_EASY;
+            }else if (jrbNormal.isSelected()){
+                difficultMode = GAME_DIFFICULT_MODE_NORMAL;
+            }else {
+                difficultMode = GAME_DIFFICULT_MODE_HARD;
+            }
             if (jrbHumanVsAi.isSelected()) {
                 mode = GAME_MODE_H_VS_A;
             } else {
                 mode = GAME_MODE_H_VS_H;
             }
 
+
             int fieldSize = jsFieldSize.getValue();
             int winningLength = jsWinningLength.getValue();
-
+            Logic.mode = mode;
+            Logic.difficultMode = difficultMode;
             Logic.SIZE = fieldSize;
             Logic.DOTS_TO_WIN = winningLength;
             Logic.initMap();

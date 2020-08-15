@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GameWindow extends JFrame {
     static final int WINDOW_POS_X = 500;
-    static final int WINDOW_POS_Y = 300;
+    static final int WINDOW_POS_Y = 150;
     static final int WINDOW_HEIGHT = 555;
     static final int WINDOW_WIDTH = 505;
 
