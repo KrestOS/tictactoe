@@ -8,7 +8,7 @@ public class BattleField extends JPanel {
     private int mode;
     private int fieldSize;
     private int winningLength;
-
+    private int player = 0;
     private boolean isInit;
 
     private int cellWidth;
@@ -18,8 +18,7 @@ public class BattleField extends JPanel {
     public BattleField(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
 
-        setBackground(Color.ORANGE);
-
+        setBackground(Color.DARK_GRAY);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -28,15 +27,49 @@ public class BattleField extends JPanel {
         });
     }
 
+
+
     private void clickBattleField(MouseEvent e) {
+
         int cellX = e.getX() / cellWidth;
         int cellY = e.getY() / cellHeight;
+        Logic.whoIsWin = 0;
 
         if(!Logic.isFinished){
-            Logic.humanTurn(cellX, cellY);
-        }
+            if (mode != 0){
+                if (player == 0){
+                    Logic.humanTurn(cellX, cellY,player);
+                    player = 1;
+                }else {
+                    Logic.humanTurn(cellX,cellY,player);
+                    player = 0;
+                }
+            }else {
+                Logic.humanTurn(cellX, cellY,player);
+            }
+
+       }
 
         repaint();
+       switch (Logic.whoIsWin){
+           case (1):
+               if (mode != 0){
+                   JOptionPane.showMessageDialog(this,"Player " + player + " is WIN!","Game over",JOptionPane.DEFAULT_OPTION);
+                   break;
+               }
+               JOptionPane.showMessageDialog(this,"You WIN!","Game over",JOptionPane.DEFAULT_OPTION);
+               break;
+           case (2):
+               JOptionPane.showMessageDialog(this,"Draw!\nTry again!","Game over",JOptionPane.DEFAULT_OPTION);
+               break;
+           case (3):
+               if (mode != 0){
+                   JOptionPane.showMessageDialog(this,"Player " + (player+2) + " is WIN!","Game over",JOptionPane.DEFAULT_OPTION);
+                   break;
+               }
+               JOptionPane.showMessageDialog(this,"You Lose):\nTry again!","Game over",JOptionPane.DEFAULT_OPTION);
+               break;
+       }
 
     }
 
@@ -64,8 +97,8 @@ public class BattleField extends JPanel {
 
         cellHeight = panelHeight / fieldSize;
         cellWidth = panelWidth / fieldSize;
-
-        g.setColor(Color.BLACK);
+        ((Graphics2D) g).setStroke(new BasicStroke(2));
+        g.setColor(Color.WHITE);
 
         for (int i = 0; i < fieldSize; i++) {
             int y = i * cellHeight;
@@ -93,11 +126,12 @@ public class BattleField extends JPanel {
         ((Graphics2D) g).setStroke(new BasicStroke(5));
         g.setColor(Color.RED);
         g.drawLine(cellWidth * x, cellHeight * y, cellWidth * (x + 1), cellHeight * (y + 1));
-        
+        g.drawLine(cellWidth * x, cellHeight * (y+1), cellWidth * (x+1), cellHeight * (y));
     }
 
     private void drawO(Graphics g, int x, int y) {
+        ((Graphics2D) g).setStroke(new BasicStroke(5));
         g.setColor(Color.BLUE);
-        g.drawLine(cellWidth * x, cellHeight * y, cellWidth * (x + 1), cellHeight * (y + 1));
+        g.drawOval(cellWidth * x , cellHeight * y, cellWidth, cellHeight);
     }
 }
